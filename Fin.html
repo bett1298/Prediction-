@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Virtual Bet Predictor</title>
+  <style>
+  body {
+  position: relative;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: green;
+  margin: 0;
+  padding: 40px 20px;
+  color: #37474f;
+  min-height: 100vh;
+  /* Remove background-image from body */
+  background-image: none;
+}
+
+body::before {
+  content: "";
+  position: fixed;   /* or absolute, depending on your needs */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('https://i.ibb.co/s9FhqwST/download.png');
+  background-repeat: repeat;
+  background-size: 40px 40px;
+  opacity: 0.25;  /* Adjust this value to reduce opacity */
+  pointer-events: none; /* So clicks pass through */
+  z-index: -1;   /* Behind the body content */
+}
+    
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 30px 40px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #2c3e50;
+      border-bottom: 2px solid #e0e0e0;
+      padding-bottom: 12px;
+      margin-bottom: 25px;
+      font-weight: 600;
+      font-size: 1.8rem;
+    }
+    label {
+      display: inline-block;
+      margin-top: 15px;
+      font-weight: 600;
+      width: 70px;
+    }
+    input[type="number"], input[type="text"] {
+      width: 120px;
+      padding: 8px 10px;
+      margin-left: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    button {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 12px 25px;
+      background-color: #00695c;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #004d40;
+    }
+    .prediction-box {
+      margin-top: 30px;
+      padding: 20px 25px;
+      background-color: #f9f9f9;
+      border-left: 5px solid #00695c;
+      border-radius: 6px;
+      display: none;
+    }
+    .prediction-box p {
+      margin: 8px 0;
+      font-size: 1.1rem;
+    }
+    .prediction-box span.label {
+      font-weight: 700;
+      color: #263238;
+      margin-right: 6px;
+    }
+    .final-result-input {
+      margin-top: 15px;
+      width: 160px;
+    }
+    .container h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem; /* smaller size */
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  background: linear-gradient(90deg, #ff6f61, yellow,green);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 20px;
+  
+  /* Animation */
+  animation: colorPulse 6s ease-in-out infinite alternate;
+  /* Optional smooth scale */
+  transform-origin: center;
+  animation-name: colorPulseScale;
+  animation-duration: 6s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  white-space: nowrap;
+}
+}
+
+/* Combined scale + color pulse */
+@keyframes colorPulseScale {
+  0% {
+    filter: hue-rotate(0deg);
+    transform: scale(1);
+  }
+  50% {
+    filter: hue-rotate(40deg);
+    transform: scale(1.1);
+  }
+  100% {
+    filter: hue-rotate(0deg);
+    transform: scale(1);
+  }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Odi league premium dashboard </h2>
+    
+    <div>
+      <label for="home">Home:</label>
+      <input type="number" id="home" step="0.01" placeholder="e.g. 1.5" />
+    </div>
+    
+    <div>
+      <label for="draw">Draw:</label>
+      <input type="number" id="draw" step="0.01" placeholder="e.g. 3.2" />
+    </div>
+    
+    <div>
+      <label for="away">Away:</label>
+      <input type="number" id="away" step="0.01" placeholder="e.g. 2.8" />
+    </div>
+    
+    <button type="button" onclick="predict()">Predict</button>
+
+    <div class="prediction-box" id="predictionBox">
+      <p><span class="label">Prediction:</span><span id="prediction"></span></p>
+      <p><span class="label">Previous Result:</span><span id="prevResult">None</span></p>
+      <div>
+        <label for="finalResult">Final Result:</label>
+        <input type="text" id="finalResult" class="final-result-input" placeholder="e.g. 2-1" />
+      </div>
+      <button type="button" onclick="saveResult()">Save Final Result</button>
+    </div>
+  </div>
+
+  <script>
+    function predict() {
+      const home = parseFloat(document.getElementById('home').value);
+      const draw = parseFloat(document.getElementById('draw').value);
+      const away = parseFloat(document.getElementById('away').value);
+
+      if (isNaN(home) || isNaN(draw) || isNaN(away)) {
+        alert("Please enter valid odds for Home, Draw, and Away.");
+        return;
+      }
+
+      let pred1x2 = "1";
+      const diff = Math.abs(home - away);
+      if (
+        diff <= 0.3 &&
+        Math.abs(draw - home) <= 0.3 &&
+        Math.abs(draw - away) <= 0.3
+      ) {
+        pred1x2 = "X";
+      } else if (away < home && away < draw) {
+        pred1x2 = "2";
+      }
+
+      // GG prediction
+      let gg = "No GG";
+      if (home > 2.4 && home < 3.1 && away > 2.4 && away < 3.1) {
+        gg = "GG";
+      }
+
+      // Over/Under 2.5 goals
+      let over25 = "Under 2.5";
+      if ((home + away) / 2 > 2.5) {
+        over25 = "Over 2.5";
+      }
+
+      const prediction = `${gg} | ${over25} | ${pred1x2}`;
+
+      document.getElementById("prediction").innerText = prediction;
+      document.getElementById("predictionBox").style.display = "block";
+
+      const key = `${home}-${draw}-${away}`;
+      const storedResult = localStorage.getItem(key);
+      document.getElementById("prevResult").innerText = storedResult || "None";
+
+      localStorage.setItem("lastKey", key);
+    }
+
+    function saveResult() {
+      const finalResult = document.getElementById("finalResult").value.trim();
+      const key = localStorage.getItem("lastKey");
+
+      if (!key || finalResult === "") {
+        alert("No prediction or final result to save.");
+        return;
+      }
+
+      localStorage.setItem(key, finalResult);
+      alert("Final result saved successfully.");
+      document.getElementById("prevResult").innerText = finalResult;
+      document.getElementById("finalResult").value = "";
+    }
+  </script>
+</body>
+</html>

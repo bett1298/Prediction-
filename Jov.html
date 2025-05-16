@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Loading Splash + Predictor</title>
+  <style>
+    /* Splash screen styles */
+    #splash {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: green;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 1.8rem;
+      font-weight: 700;
+      text-align: center;
+      z-index: 9999;
+      animation: zoomInText 3s forwards;
+    }
+
+    @keyframes zoomInText {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Main content initially hidden */
+    #mainContent {
+      display: none;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 30px;
+      background: #eef3f7;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    /* Main container */
+    .container {
+      background: white;
+      padding: 25px 35px;
+      border-radius: 8px;
+      max-width: 400px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin: 40px auto;
+    }
+    h2 {
+      color: #263238;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    label {
+      display: inline-block;
+      margin: 10px 0 5px;
+      font-weight: 600;
+      color: #37474f;
+    }
+    input[type=number], input[type=text] {
+      width: 100%;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+    button {
+      width: 100%;
+      background: #00796b;
+      border: none;
+      color: white;
+      padding: 12px;
+      font-size: 1rem;
+      margin-top: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #004d40;
+    }
+    .result-box {
+      margin-top: 20px;
+      background: #e0f2f1;
+      padding: 15px;
+      border-left: 5px solid #00796b;
+      border-radius: 5px;
+      font-weight: 600;
+      color: #004d40;
+    }
+    .splash-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+  </style>
+</head>
+<body>
+  <!-- Splash screen --><!-- Splash screen -->
+<div id="splash">
+  <div style="text-align:center;">
+    <img src="https://i.ibb.co/s9FhqwST/download.png" alt="Logo" class="splash-logo" />
+    <div>ODI LEAGUE PREDICTOR</div>
+  </div>
+</div>
+  
+
+  <!-- Main predictor content --><div id="mainContent">
+  <div class="container">
+    <p style="font-size: 12px; color: red; font-style: italic; margin-bottom: 10px;">
+      ⚠️ Disclaimer: This prediction might not be accurate. Consider upgrading to a premium membership for better accuracy.
+    </p>
+    <h2>1X2 Predictor</h2>
+
+      <label for="home">Home Win Odds (1)</label>
+      <input type="number" id="home" step="0.01" min="1" placeholder="e.g. 2.50" />
+
+      <label for="draw">Draw Odds (X)</label>
+      <input type="number" id="draw" step="0.01" min="1" placeholder="e.g. 3.10" />
+
+      <label for="away">Away Win Odds (2)</label>
+      <input type="number" id="away" step="0.01" min="1" placeholder="e.g. 2.80" />
+
+      <button onclick="predict1X2()">Predict</button>
+
+      <div class="result-box" id="predictionResult" style="display:none;">
+        <p><strong>Prediction:</strong> <span id="predictedOutcome"></span></p>
+
+        <label for="finalResult" style="margin-top:10px;">Enter Final Result (optional)</label>
+        <input type="text" id="finalResult" placeholder="Final score e.g. 1-0" />
+        <button onclick="showFinalResult()">Submit Final Result</button>
+
+        <p id="finalResultDisplay" style="margin-top:10px; font-weight:normal; color:#00796b;"></p>
+        <button onclick="goToPremium()" style="background:#ff6f00;">Go to Premium Features</button>
+      </div>
+    </div>
+  </div>
+  
+
+  <script>
+    // Show main content after splash screen
+    setTimeout(() => {
+      document.getElementById('splash').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+    }, 7000);
+
+    function predict1X2() {
+      const home = parseFloat(document.getElementById('home').value);
+      const draw = parseFloat(document.getElementById('draw').value);
+      const away = parseFloat(document.getElementById('away').value);
+
+      if (isNaN(home) || isNaN(draw) || isNaN(away)) {
+        alert('Please enter all three odds.');
+        return;
+      }
+
+      let prediction = '';
+      if (home < draw && home < away) {
+        prediction = '1 (Home Win)';
+      } else if (draw < home && draw < away) {
+        prediction = 'X (Draw)';
+      } else {
+        prediction = '2 (Away Win)';
+      }
+
+      document.getElementById('predictedOutcome').textContent = prediction;
+      document.getElementById('predictionResult').style.display = 'block';
+      document.getElementById('finalResultDisplay').textContent = '';
+      document.getElementById('finalResult').value = '';
+    }
+
+    function showFinalResult() {
+      const finalResult = document.getElementById('finalResult').value.trim();
+      if (finalResult === '') {
+        alert('Please enter the final result or leave blank.');
+        return;
+      }
+      document.getElementById('finalResultDisplay').textContent = `Final result entered: ${finalResult} (Not saved in this version)`;
+    }
+    function goToPremium() {
+  window.location.href = "public.html"; // Replace with your premium page path
+}
+  </script>
+</body>
+</html>

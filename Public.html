@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Premium Upgrade -</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: green;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      text-align: center;
+      padding: 50px 20px;
+    }
+
+    h1 {
+      color: yellow;
+    }
+
+    .open-modal-btn {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      padding-top: 60px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: green;
+    }
+
+    .modal-content {
+      background: #fff;
+      margin: auto;
+      padding: 30px;
+      border-radius: 12px;
+      position: relative;
+      text-align: center;
+      animation: fadeIn 0.3s ease-in-out;
+      max-height: 70vh;
+  overflow-y: auto;
+  width: 80%;
+  max-width: 400px;
+}
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .close-btn {
+      color: #aaa;
+      font-size: 28px;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      cursor: pointer;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+      text-align: left;
+    }
+
+    ul li::before {
+      content: "✓ ";
+      color: green;
+    }
+
+    .payment-info {
+      text-align: left;
+      margin-top: 20px;
+    }
+
+    textarea, input {
+      width: 100%;
+      margin-top: 15px;
+      padding: 12px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .btn-verify, .btn-login {
+      background-color: #28a745;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      margin-top: 15px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .btn-verify:hover, .btn-login:hover {
+      background-color: #218838;
+    }
+
+    #loginForm {
+      margin-top: 20px;
+      display: none;
+    }
+
+    #logCode {
+      font-weight: bold;
+      color: #007bff;
+      margin-top: 10px;
+    }
+    p.animated-text {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      animation: moveZoomColor 3s infinite alternate ease-in-out;
+      display: inline-block;
+    }
+
+    @keyframes moveZoomColor {
+      0% {
+        transform: translateX(0) scale(1) translateY(0);
+        color: #ff6600;
+      }
+      25% {
+        transform: translateX(20px) scale(1.1) translateY(-5px);
+        color: #33cc33;
+      }
+      50% {
+        transform: translateX(40px) scale(1) translateY(5px);
+        color: #0066ff;
+      }
+      75% {
+        transform: translateX(20px) scale(1.1) translateY(-5px);
+        color: #cc00cc;
+      }
+      100% {
+        transform: translateX(0) scale(1) translateY(0);
+        color: #ff6600;
+      }
+    
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Upgrade to Premium</h1>
+    <p>Unlock advanced tools for better prediction & analysis</p>
+    <button class="open-modal-btn" onclick="openModal('premiumModal')">See Premium Features</button>
+  </div>
+
+  <!-- Premium Modal -->
+  <div id="premiumModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('premiumModal')">&times;</span>
+      <h2>Upgrade to Premium – Only Ksh 99</h2>
+      <p class="animated-text">Unlock these exclusive features:</p>
+<ul>
+  <li>Predicts match results: 1 for Home win, X for Draw, 2 for Away win based on odds. ✅&nbsp;</li>
+  <li>Predicts Both Teams to Score (GG) when odds are in a certain range. ✅&nbsp;</li>
+  <li>Predicts Over or Under 2.5 goals using the average of home and away odds. ✅&nbsp;</li>
+  <li>Shows prediction results in a clean and easy-to-read dashboard. ✅&nbsp;</li>
+  <li>Allows users to enter and save the final match result manually. ✅&nbsp;</li>
+  <li>Saves the final result in localStorage to keep it for later. ✅&nbsp;</li>
+  <li>Shows saved results automatically when the same odds appear again. ✅&nbsp;</li>
+</ul>
+      <hr>
+      <div class="payment-info">
+        <h3>How to Pay</h3>
+        <p><strong>Go to M-Pesa > Lipa na M-Pesa > Send Money</strong></p>
+        <p><strong>Phone Number:</strong> <span style="color:green;">0797612155</span></p>
+        <p><strong>Recipient Name:</strong> Emanuel</p>
+        <p><em>Send Ksh 99 and paste the message below to verify.</em></p>
+      </div>
+
+      <textarea id="mpesaMessage" rows="5" placeholder="Paste your full M-Pesa message here..."></textarea>
+      <button onclick="verifyMpesaMessage()" class="btn-verify">Verify Now</button>
+
+      <p id="logCode"></p>
+
+      <div id="loginForm">
+        <input type="text" id="username" placeholder="Enter your phone number or name" required />
+        <input type="password" id="password" placeholder="Enter Log Code" required />
+        <button onclick="login()" class="btn-login">Login to Dashboard</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+   
+  function openModal(id) {
+    document.getElementById(id).style.display = 'block';
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
+  }
+
+  function generateLogCode() {
+    return 'PREM-' + Math.floor(100000 + Math.random() * 900000);
+  }
+function verifyMpesaMessage() {
+  const message = document.getElementById("mpesaMessage").value.trim().toLowerCase();
+  const logCodeElem = document.getElementById("logCode");
+  const loginForm = document.getElementById("loginForm");
+
+  // Use regular expressions to match only exact Ksh 99
+  const amountCheck = /\bksh\s?99\b/.test(message) || /\b99\.00\b/.test(message);
+  const nameCheck = message.includes("emanuel kipkirui bett");
+
+  if (amountCheck && nameCheck) {
+    const code = generateLogCode();
+    logCodeElem.innerHTML = "Your Log Code: <br><span style='font-size: 18px;'>" + code + "</span>";
+    document.getElementById("password").value = code;
+    loginForm.style.display = "block";
+  } else {
+    logCodeElem.innerHTML = "<span style='color:red;'>Invalid M-Pesa message. Make sure you've sent exactly Ksh 99 to Emanuel Kipkirui Bett.</span>";
+    loginForm.style.display = "none";
+  }
+}
+
+  function login() {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const expectedCode = document.getElementById("password").value;
+
+    if (username && password === expectedCode) {
+      alert("Login successful! Redirecting to dashboard...");
+      window.location.href = "fin.html";
+    } else {
+      alert("Invalid login details. Please try again.");
+    }
+  }
+
+  window.onclick = function(event) {
+    const modal = document.getElementById('premiumModal');
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  };
+
+    function verifyMpesaMessage() {
+  const message = document.getElementById("mpesaMessage").value.trim().toLowerCase();
+  const logCodeElem = document.getElementById("logCode");
+  const loginForm = document.getElementById("loginForm");
+
+  // Check if message contains Ksh199 and the correct name
+  const amountCheck = message.includes("ksh99") || message.includes("ksh 99") || message.includes("99.00");
+  const nameCheck = message.includes("emanuel kipkirui bett");
+
+  if (amountCheck && nameCheck) {
+    const code = generateLogCode();
+    logCodeElem.innerHTML = "Your Log Code: <br><span style='font-size: 18px;'>" + code + "</span>";
+    document.getElementById("password").value = code;
+    loginForm.style.display = "block";
+  } else {
+    logCodeElem.innerHTML = "<span style='color:red;'>Invalid M-Pesa message. Make sure you've sent Ksh 99 to Emanuel Kipkirui Bett.</span>";
+    loginForm.style.display = "none";
+  }
+}
+window.onload = function () {
+  const savedCode = localStorage.getItem('mchangoLogCode');
+  const savedTime = localStorage.getItem('mchangoLogTime');
+  const now = Date.now();
+
+  const logCodeElem = document.getElementById("logCode");
+  const loginForm = document.getElementById("loginForm");
+  const passwordInput = document.getElementById("password");
+
+  if (savedCode && savedTime) {
+    const age = now - parseInt(savedTime, 10);
+    const sixDays = 6 * 24 * 60 * 60 * 1000;
+
+    if (age < sixDays) {
+      logCodeElem.innerHTML = "Your Log Code: <br><span style='font-size: 18px;'>" + savedCode + "</span>";
+      passwordInput.value = savedCode;
+      loginForm.style.display = "block";
+    } else {
+      // Expired
+      localStorage.removeItem('mchangoLogCode');
+      localStorage.removeItem('mchangoLogTime');
+      logCodeElem.innerHTML = "<span style='color:red;'>Your log code has expired. Please verify M-Pesa message again.</span>";
+      loginForm.style.display = "none";
+    }
+  }
+};
+
+function generateLogCode() {
+  return 'PREM-' + Math.floor(100000 + Math.random() * 900000);
+}
+
+function verifyMpesaMessage() {
+  const message = document.getElementById("mpesaMessage").value.trim().toLowerCase();
+  const logCodeElem = document.getElementById("logCode");
+  const loginForm = document.getElementById("loginForm");
+
+  const amountCheck = message.includes("ksh99") || message.includes("ksh 99") || message.includes("99.00");
+  const nameCheck = message.includes("emanuel kipkirui bett");
+
+  if (amountCheck && nameCheck) {
+    const code = generateLogCode();
+    const timestamp = Date.now();
+
+    logCodeElem.innerHTML = "Your Log Code: <br><span style='font-size: 18px;'>" + code + "</span>";
+    document.getElementById("password").value = code;
+    loginForm.style.display = "block";
+
+    localStorage.setItem('mchangoLogCode', code);
+    localStorage.setItem('mchangoLogTime', timestamp);
+  } else {
+    logCodeElem.innerHTML = "<span style='color:red;'>Invalid M-Pesa message. Make sure you've sent Ksh 99 to Emanuel Kipkirui Bett and pasted full message.</span>";
+    loginForm.style.display = "none";
+
+    localStorage.removeItem('mchangoLogCode');
+    localStorage.removeItem('mchangoLogTime');
+  }
+}
+
+function validatePhoneNumber(phone) {
+  const phoneRegex = /^07\d{8}$/;
+  return phoneRegex.test(phone);
+}
+
+function login() {
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const expectedCode = localStorage.getItem('mchangoLogCode');
+  const savedTime = localStorage.getItem('mchangoLogTime');
+  const now = Date.now();
+
+  if (!username) {
+    alert("Please enter your phone number.");
+    return;
+  }
+
+  if (!validatePhoneNumber(username)) {
+    alert("Please enter a valid phone number starting with 07 and 10 digits long.");
+    return;
+  }
+
+  if (!expectedCode || !savedTime || now - savedTime > 6 * 24 * 60 * 60 * 1000) {
+    alert("Your log code has expired. Please verify your M-Pesa message again.");
+    return;
+  }
+
+  if (password === expectedCode) {
+    alert("Login successful! Redirecting to dashboard...");
+    window.location.href = "fin.html";
+  } else {
+    alert("Invalid login details. Please make sure your log code is correct.");
+  }
+}
+  </script>
+
+</body>
+</html>
